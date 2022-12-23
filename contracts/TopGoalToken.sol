@@ -42,11 +42,10 @@ contract TopGoalToken is BEP20, Pausable {
     event DelegateVotesChanged(address indexed delegate, uint previousBalance, uint newBalance);
 
     constructor()
-        BEP20("TopGoal Token", "Goal") public
+        BEP20("TopGoal Token", "Goal")
     {
         uint256 amount = 1000000000 * 10 ** 18;
         _mint(msg.sender, amount);
-        _moveDelegates(address(0), _delegates[msg.sender], amount);
     }
 
     function pause() public onlyOwner {
@@ -108,7 +107,7 @@ contract TopGoalToken is BEP20, Pausable {
     * @notice Delegate votes from `msg.sender` to `delegatee`
     * @param delegatee The address to delegate votes to
     */
-    function delegate(address delegatee) external {
+    function delegate(address delegatee) whenNotPaused external {
         return _delegate(msg.sender, delegatee);
     }
 
@@ -128,7 +127,7 @@ contract TopGoalToken is BEP20, Pausable {
         uint8 v,
         bytes32 r,
         bytes32 s
-    )
+    )   whenNotPaused
         external
     {
         bytes32 domainSeparator = keccak256(
